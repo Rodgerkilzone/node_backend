@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myapplication">
+<head>
+	<title></title>
+	
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<script src="angular.min.js"></script>
+	<style type="text/css">
+		body{
+			background-color:skyblue;
+		}
+		.even{
+			background-color:yellow;
+		}
+		.odd{
+			background-color:orange;
+		}
+	.block.ng-enter{
+			transition:300ms linear all;
+			transform:translateX(-100%);
+		}
+
+		.block.ng-enter.ng-enter-active{
+		transform:translateY(0%);
+		transform:rotateY(360deg);
+			
+		}
+		.my{
+			background-color:###C7C7C7;
+		}
+	</style>
+</head>
+<body><br><br>
+<div class="col-md-offset-3 col-md-6" ng-controller="control" style="background-color:white;box-shadow:2px 2px 2px"><br>
+<form class="form-group" >
+	<!--ng-submit='post()'-->
+	vehicle_model:<input class="form-control" disabled required type="text" name="vehicle_model" ng-model="contact.vehicle_model"><br><br>
+	user_id:<input class="form-control" disabled required type="text" name="user_id" ng-model="contact.user_id"><br><br>
+	<!--model_id:<input class="form-control" required type="text" name="model_id" ng-model="contact.user_id_id"><br><br>-->
+		<input class="btn btn-primary pull-left form-control" type="submit" name="submit" value="submit"><br><br>
+</form>
+<input class="form-control" ng-model="search" placeholder="SEARCH" ><br><br>
+<style >
+	.even{
+		background-color:#A0A0A0;
+	}
+		.odd{
+		background-color:white;
+	}
+</style>
+<div  ng-repeat="user in may | orderBy:'-_id' | filter:search"><blockquote class="block"  ng-class-odd="'odd'" ng-class-even="'even'" style="border-color:red;box-shadow:2px 2px 2px;border-radius:10px"><p ng-init="filter=search">{{user.model}}
+<button class="btn btn-danger pull-right" disabled  ng-click="delete(user._id)">DELETE</button></p>
+<small>           id={{user.make_id}}</small>
+<!--{{user._id}}   -->
+</blockquote></div><br><br>
+      <script>
+
+var app=angular.module('myapplication',['ngRoute']);
+app.controller('control',function($scope,$http){
+
+
+$http.get('/api/vehicle_model/get').then(function(response){
+	// $scope.get=response;
+	$scope.may=response.data;
+	console.log($scope.may);
+});
+
+$scope.refresh=function() {
+$http.get('/api/vehicle_model/get').then(function(response){
+	// $scope.get=response;
+	$scope.may=response.data;
+});
+
+	// body...
+};
+
+	$scope.post=function(){
+$http.post('/api/vehicle_model/post',$scope.contact).then(function(response){
+console.log('successfully posted');
+$scope.contact={};
+
+})
+$scope.refresh();
+
+};
+	$scope.delete=function(id) {
+	$http.delete('/api/vehicle_model/delete/'+id).then(function(response){
+console.log('successfull deleted');
+$scope.refresh();
+
+});
+
+	}
+
+
+
+});
+	
+</script>
+</div>
+    <script src="js/jquery-3.2.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+	<script src="angular-animate.min.js"></script>
+	<script src="angular-route.min.js"></script>
+</body>
+</html>
